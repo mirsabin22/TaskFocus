@@ -1,8 +1,8 @@
-from PyQt6.QtWidgets import (
+from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QPushButton, QListWidget,
     QLineEdit, QLabel, QProgressBar, QMessageBox
 )
-from PyQt6.QtCore import QTimer
+from PyQt5.QtCore import QTimer
 from database import Database
 from tasks import TaskManager
 from timer import PomodoroTimer
@@ -10,17 +10,21 @@ from timer import PomodoroTimer
 class ToDoTimerApp(QWidget):
     def __init__(self):
         super().__init__()
+
+        # Inisialisasi database
+        self.db = Database()
+
+        # Buat Timer sebelum UI agar tidak terjadi AttributeError
+        self.timer = PomodoroTimer(self)  # Tambahkan ini lebih awal
+
+        # Inisialisasi UI
         self.initUI()
 
-        # Inisialisasi database dan manajemen tugas
-        self.db = Database()
+        # Buat TaskManager setelah UI dibuat
         self.task_manager = TaskManager(self.db, self.task_list)
 
-        # Inisialisasi timer
-        self.timer = PomodoroTimer(self)
-
+        # Load tasks setelah UI selesai dibuat
         self.task_manager.load_tasks()
-
     def initUI(self):
         self.setWindowTitle("To-Do List dengan Pomodoro Timer")
         self.setGeometry(100, 100, 400, 500)
