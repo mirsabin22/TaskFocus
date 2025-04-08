@@ -16,16 +16,22 @@ class Database:
         self.conn.commit()
 
     def fetch_tasks(self):
-        self.cursor.execute("SELECT task FROM tasks")
+        self.cursor.execute("SELECT id, task FROM tasks")
         return self.cursor.fetchall()
+
 
     def add_task(self, task_text):
         self.cursor.execute("INSERT INTO tasks (task) VALUES (?)", (task_text,))
         self.conn.commit()
 
-    def delete_task(self, task_text):
-        self.cursor.execute("DELETE FROM tasks WHERE task = ?", (task_text,))
+    def delete_task(self, task_id):
+        self.cursor.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
         self.conn.commit()
+    
+    def update_task(self, task_id, new_text):
+        self.cursor.execute("UPDATE tasks SET task = ? WHERE id = ?", (new_text, task_id))
+        self.conn.commit()
+
 
     def close(self):
         self.conn.close()
