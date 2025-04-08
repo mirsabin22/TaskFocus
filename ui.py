@@ -41,9 +41,16 @@ class ToDoTimerApp(QWidget):
         self.add_task_btn.clicked.connect(self.add_task)
         layout.addWidget(self.add_task_btn)
 
+        # Tombol edit tugas
+        self.edit_task_btn = QPushButton("Edit Tugas", self)
+        self.edit_task_btn.clicked.connect(self.edit_task)
+        layout.addWidget(self.edit_task_btn)
+
         # List tugas
         self.task_list = QListWidget(self)
         layout.addWidget(self.task_list)
+
+        self.task_list.itemDoubleClicked.connect(self.load_task_to_input)
 
         # Tombol hapus tugas
         self.delete_task_btn = QPushButton("Hapus Tugas", self)
@@ -72,6 +79,17 @@ class ToDoTimerApp(QWidget):
 
     def add_task(self):
         self.task_manager.add_task(self.task_input.text())
+        self.task_input.clear()
 
     def delete_task(self):
         self.task_manager.delete_task()
+    
+    def edit_task(self):
+        new_text = self.task_input.text()
+        self.task_manager.edit_task(new_text)
+        self.task_input.clear()
+        
+    def load_task_to_input(self, item):
+        self.task_input.setText(item.text())
+
+
