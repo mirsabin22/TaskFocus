@@ -60,8 +60,13 @@ class ToDoTimerApp(QWidget):
 
         # Tombol start/pause timer
         self.timer_btn = QPushButton("Mulai Timer", self)
-        self.timer_btn.clicked.connect(self.timer.start_timer)
+        self.timer_btn.clicked.connect(self.timer.handle_timer_click)  # ← change here
         layout.addWidget(self.timer_btn)
+
+        self.reset_btn = QPushButton("Reset Timer", self)
+        self.reset_btn.clicked.connect(self.timer.reset_timer)
+        layout.addWidget(self.reset_btn)
+
 
         self.setLayout(layout)
 
