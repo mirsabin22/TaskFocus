@@ -1,5 +1,6 @@
 from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QSystemTrayIcon, QApplication
+from PyQt5.QtGui import QIcon
 
 class PomodoroTimer:
     def __init__(self, ui):
@@ -9,6 +10,13 @@ class PomodoroTimer:
         self.timer_running = False
         self.seconds_left = 1500  # 25 minutes
         self.in_break = False
+
+        # Setup system tray icon
+        self.tray_icon = QSystemTrayIcon(self.ui.style().standardIcon(QApplication.style().SP_ComputerIcon), self.ui)
+        if not self.tray_icon.isSystemTrayAvailable():
+            QMessageBox.warning(self.ui, "Peringatan", "System tray tidak tersedia.")
+        else:
+            self.tray_icon.setVisible(True)
 
     def handle_timer_click(self):
         current_task = self.ui.task_list.currentItem()
@@ -50,7 +58,12 @@ class PomodoroTimer:
             self.ui.progress_bar.setValue(int((elapsed / 1500) * 100))
         else:
             self.timer.stop()
-            QMessageBox.information(self.ui, "Waktu Habis!", "Istirahat sejenak!")
-            self.seconds_left = 300  # break for 5 minutes
-            self.ui.timer_btn.setText("Mulai Timer")
             self.timer_running = False
+            self.ui.timer_btn.setText("Mulai Timer")
+            self.seconds_left = 300  # 5 minutes break
+
+            # Show system tray notification
+            if self.tray_icon.isVisible():
+                self.tray_icon.showMessage("Waktu Habis!", "Istirahat sejenak!", QSystemTrayIcon.Information, 5000)
+            else:
+                QMessageBox.information(self.ui, "Waktu Habis!", "Istirahat sejenak!")
