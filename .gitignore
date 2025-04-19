@@ -1,3 +1,6 @@
 myenv
 __pycache__
 tasks.db
+build
+dist
+main.spec

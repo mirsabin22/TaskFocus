@@ -11,7 +11,7 @@ class PomodoroTimer:
         self.seconds_left = 1500  # 25 minutes
         self.in_break = False
 
-        # Setup system tray icon
+        #tray icon
         self.tray_icon = QSystemTrayIcon(self.ui.style().standardIcon(QApplication.style().SP_ComputerIcon), self.ui)
         if not self.tray_icon.isSystemTrayAvailable():
             QMessageBox.warning(self.ui, "Peringatan", "System tray tidak tersedia.")

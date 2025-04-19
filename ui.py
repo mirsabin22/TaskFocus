@@ -83,8 +83,20 @@ class ToDoTimerApp(QWidget):
 
         # Tombol hapus tugas
         self.delete_task_btn = QPushButton("Hapus Tugas", self)
-        self.delete_task_btn.setStyleSheet(button_style)
-        self.delete_task_btn.clicked.connect(self.delete_task)
+        self.delete_task_btn.setStyleSheet("""
+            QPushButton {
+                padding: 8px;
+                font-size: 13px;
+                background-color: #f94144;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                }
+            QPushButton:hover {
+                background-color: #d62828;
+    }
+    """)
+        self.delete_task_btn.clicked.connect(self.confirm_delete_task)
         layout.addWidget(self.delete_task_btn)
 
         # Timer
@@ -127,3 +139,22 @@ class ToDoTimerApp(QWidget):
 
     def load_task_to_input(self, item):
         self.task_input.setText(item.text())
+    def confirm_delete_task(self):
+        current_task = self.task_list.currentItem()
+        if not current_task:
+            QMessageBox.warning(self, "Peringatan", "Pilih tugas yang ingin dihapus terlebih dahulu!")
+            return
+
+        reply = QMessageBox.question(
+            self,
+            "Konfirmasi Hapus",
+            f"Yakin ingin menghapus tugas '{current_task.text()}'?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+
+        if reply == QMessageBox.Yes:
+            self.delete_task()
+
+    def delete_task(self):
+        self.task_manager.delete_task()
